@@ -1,0 +1,15 @@
+#!/bin/bash
+#PBS -N UserName
+#PBS -l nodes=8:student:ppn=8
+#PBS -l walltime=36000:00
+
+cd /gss/home/student/nbody_labs/SharMax/
+source "/gss/home/student/nbody_labs/init_file/source.sh"
+
+date				#вывод текущего времени
+HOSTFILE=${PBS_JOBID}.hosts			#здесь формируется файл 
+cat ${PBS_NODEFILE} | sort | uniq > ${HOSTFILE}	# со списком узлов для mpirun
+NUM_NODES=`cat ${HOSTFILE} | wc -l`; cat ${HOSTFILE}
+
+
+mpirun -r ssh -f ${HOSTFILE} -ppn 8 -np 64 ./test 122880
